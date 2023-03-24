@@ -13,6 +13,8 @@ class DocenteController extends Controller
     public function index()
     {
         //$docentes = Docente::paginate(10)->orderBy('idDocente','desc');
+        //session(['message'=> 'Registro exitoso']);
+        //session(['color'=>'warning']);
         $docentes = Docente::orderBy('created_at', 'desc')->paginate(10);
         return view("docentes.index", compact('docentes'));
     }
@@ -43,7 +45,7 @@ class DocenteController extends Controller
         // Creamos un nuevo objeto Docente con los datos validados
         $docente = new Docente;
         $docente->nombre = $validatedData['nombre'];
-        $docente->apellido = $validatedData['apellido'];
+        $docente->apellidos = $validatedData['apellido'];
         $docente->cedula = $validatedData['cedula'];
         $docente->celular = $validatedData['celular'];
         $docente->correo = $validatedData['correo'];
@@ -51,7 +53,9 @@ class DocenteController extends Controller
         $docente->ciudad = $validatedData['ciudad'];
         $docente->save();
         // Redirigimos al usuario a la página principal de Docentes
-        session()->flash('success', 'Registro guardado exitosamente');
+        //session()->flash('success', 'Registro guardado exitosamente');
+        session(['message'=> 'Registro exitoso']);
+        session(['color'=>'warning']);
         return redirect()->back();
     }
 
@@ -78,12 +82,13 @@ class DocenteController extends Controller
     public function update(Request $request, string $id)
     {
         $docente = Docente::findOrFail($id);
-        $docente->cedula = $request->input('cedula');
         $docente->nombre = $request->input('nombre');
         $docente->apellido = $request->input('apellido');
+        $docente->cedula = $request->input('cedula');
         $docente->celular = $request->input('celular');
         $docente->correo = $request->input('correo');
         $docente->contrasena = $request->input('contrasena');
+        $docente->ciudad = $request->input('ciudad');
         $docente->save();
         return redirect()->route('index');
     }
@@ -95,6 +100,8 @@ class DocenteController extends Controller
     {
         $docentes = Docente::findOrFail($id);
         $docentes->delete();
+        session(['message'=> 'Registro Eliminado']);
+        session(['color'=>'danger']);
         return redirect()->action([DocenteController::class, 'index']);
     }
 }
